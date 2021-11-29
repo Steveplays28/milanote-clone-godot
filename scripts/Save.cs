@@ -1,15 +1,15 @@
-using System;
 using Godot;
 using Godot.Collections;
 
 public class Save : Node
 {
-	public string saveFileName = "Note";
+	public string savePath;
+	public string saveFolder = "user://";
+	public string saveFile = "Note1.tscn";
 
 	public override void _Ready()
 	{
-		LoadState();
-
+		savePath = saveFolder + saveFile;
 		base._Ready();
 	}
 
@@ -33,74 +33,71 @@ public class Save : Node
 		base._Input(inputEvent);
 	}
 
+	public void SaveState()
+	{
+		Array nodesToSave = GetTree().GetNodesInGroup("Persist");
+		PackedScene packedScene = new PackedScene();
+
+		for (int i = 0; i < nodesToSave.Count; i++)
+		{
+			Node nodeToSave = (Node)nodesToSave[i];
+			nodeToSave.Owner = nodeToSave.GetNode("..");
+
+			foreach (Node child in GetAllChildren(nodeToSave))
+			{
+				child.Owner = nodeToSave;
+			}
+
+			packedScene.Pack(nodeToSave);
+		}
+
+		Error resourceSaverResult = ResourceSaver.Save(savePath, packedScene);
+		if (resourceSaverResult == Error.Ok)
+		{
+			GD.Print($"Saved application state to disk at path: {savePath}");
+		}
+		else
+		{
+			GD.Print($"Failed saving application state to disk, reason: {resourceSaverResult}");
+		}
+	}
+
 	public void LoadState()
 	{
-		var saveFile = new File();
-		if (!saveFile.FileExists($"user://{saveFileName}.save"))
+		PackedScene packedScene = (PackedScene)ResourceLoader.Load(savePath, noCache: true);
+		if (packedScene == null)
 		{
-			GD.PrintErr("Error loading state: no save file to load from.");
+			GD.Print("Failed to load application state from disk, reason: no PackedScene found");
 			return;
 		}
 
-		var saveNodes = GetTree().GetNodesInGroup("Persist");
-		foreach (Control saveNode in saveNodes)
+		foreach (Node node in GetTree().GetNodesInGroup("Persist"))
 		{
-			saveNode.QueueFree();
-		}
-
-		saveFile.Open($"user://{saveFileName}.save", File.ModeFlags.Read);
-		while (saveFile.GetPosition() < saveFile.GetLen())
-		{
-			// Get the saved dictionary from the next line in the save file
-			var nodeData = new Dictionary<string, object>((Dictionary)JSON.Parse(saveFile.GetLine()).Result);
-
-			// Create the object, add it to the tree, and set its position
-			var newObjectScene = (PackedScene)ResourceLoader.Load(nodeData["Filename"].ToString());
-			var newObject = (Node)newObjectScene.Instance();
-			GetNode(nodeData["Parent"].ToString()).AddChild(newObject);
-
-			// Set the remaining variables
-			foreach (System.Collections.Generic.KeyValuePair<string, object> entry in nodeData)
+			if (node != null)
 			{
-				var entryKey = entry.Key.ToString();
-				if (entryKey != "Filename" && entryKey != "Parent")
-				{
-					newObject.Set(entryKey, entry.Value);
-				}
+				node.QueueFree();
+				GD.Print("Loading application state from disk: destroyed existing version of saved asset");
 			}
 		}
 
-		GD.Print($"Loaded state from disk at path: user://{saveFileName}.save");
+		Node scene = packedScene.Instance();
+		GetTree().Root.AddChild(scene);
+
+		GD.Print($"Loaded application state from disk at path: {savePath}");
 	}
 
-	public void SaveState()
+
+	private Array GetAllChildren(Node node)
 	{
-		var saveFile = new File();
-		saveFile.Open($"user://{saveFileName}.save", File.ModeFlags.Write);
-
-		var saveNodes = GetTree().GetNodesInGroup("Persist");
-		foreach (Control saveNode in saveNodes)
+		Array children = node.GetChildren();
+		foreach (Node child in node.GetChildren())
 		{
-			// Convert node to dictionary
-			var nodeData = ControlNodeToDictionary(saveNode);
-
-			// Store the dictionary in the save file
-			saveFile.StoreLine(JSON.Print(nodeData));
-			saveFile.Flush();
+			if (child.GetChildCount() > 0)
+			{
+				children += child.GetChildren();
+			}
 		}
 
-		saveFile.Close();
-		GD.Print($"Saved state to disk at path: user://{saveFileName}.save");
-	}
-
-	private Godot.Collections.Dictionary<string, object> ControlNodeToDictionary(Control node)
-	{
-		return new Godot.Collections.Dictionary<string, object>()
-		{
-			{ "Filename", node.Filename },
-			{ "Parent", node.GetParent().GetPath() },
-			{ "RectPosition.x", node.RectPosition.x }, // Vector2 is not supported by JSON
-        	{ "RectPosition.y", node.RectPosition.y }, // --------------------------------
-		};
+		return children;
 	}
 }

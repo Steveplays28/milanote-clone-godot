@@ -3,14 +3,19 @@
 [ext_resource path="res://scripts/CursorMove.cs" type="Script" id=1]
 [ext_resource path="res://scripts/Save.cs" type="Script" id=2]
 
-[node name="Control" type="Control"]
+[node name="Node" type="Node"]
+
+[node name="SaveManager" type="Node" parent="."]
+script = ExtResource( 2 )
+
+[node name="Control" type="Control" parent="." groups=["Persist"]]
 anchor_right = 1.0
 anchor_bottom = 1.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="RichTextLabel" type="RichTextLabel" parent="."]
+[node name="RichTextLabel" type="RichTextLabel" parent="Control"]
 margin_right = 250.0
 margin_bottom = 250.0
 mouse_default_cursor_shape = 6
@@ -19,13 +24,10 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ColorRect" type="ColorRect" parent="RichTextLabel"]
+[node name="ColorRect" type="ColorRect" parent="Control/RichTextLabel"]
 margin_right = 250.0
 margin_bottom = 250.0
 mouse_filter = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }
-
-[node name="SaveManager" type="Node" parent="."]
-script = ExtResource( 2 )
