@@ -32,9 +32,11 @@ public class CursorMove : Control
 			mouseMovementY = inputEventMouseMotion.Relative.y;
 
 			if (isSelected)
-			{
-				Vector2 newPosition = new Vector2(Mathf.Clamp(inputEventMouseMotion.GlobalPosition.x, 0, GetViewport().Size.x), Mathf.Clamp(inputEventMouseMotion.GlobalPosition.y, 0, GetViewport().Size.y));
-				RectGlobalPosition = newPosition;
+			{	
+				float newPositionX = Mathf.Clamp(RectGlobalPosition.x + mouseMovementX, 0, GetViewport().Size.x - RectSize.x);
+				float newPositionY = Mathf.Clamp(RectGlobalPosition.y + mouseMovementY, 0, GetViewport().Size.y - RectSize.y);
+				
+				RectGlobalPosition = new Vector2(newPositionX, newPositionY);
 			}
 		}
 

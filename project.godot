@@ -11,7 +11,7 @@ config_version=4
 [application]
 
 config/name="Milanote-clone-godot"
-run/main_scene="res://main.tscn"
+run/main_scene="res://scenes/main.tscn"
 config/icon="res://icon.png"
 
 [debug]
