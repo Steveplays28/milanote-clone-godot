@@ -33,10 +33,11 @@ public class CursorMove : Control
 
 			if (isSelected)
 			{
-				float newPositionX = Mathf.Clamp(RectGlobalPosition.x + mouseMovementX, 0, GetViewport().Size.x - RectSize.x);
-				float newPositionY = Mathf.Clamp(RectGlobalPosition.y + mouseMovementY, 0, GetViewport().Size.y - RectSize.y);
+				Vector2 newPosition = Vector2.Zero;
+				newPosition.x = Mathf.Clamp(RectGlobalPosition.x + mouseMovementX, 0, GetViewport().Size.x - RectSize.x);
+				newPosition.y = Mathf.Clamp(RectGlobalPosition.y + mouseMovementY, 0, GetViewport().Size.y - RectSize.y);
 
-				RectGlobalPosition = new Vector2(newPositionX, newPositionY);
+				RectGlobalPosition = newPosition;
 			}
 		}
 
