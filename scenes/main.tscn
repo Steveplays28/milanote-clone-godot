@@ -21,6 +21,7 @@ margin_right = 250.0
 margin_bottom = 250.0
 mouse_filter = 2
 color = Color( 0.490196, 0.490196, 0.490196, 1 )
+script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -31,7 +32,6 @@ margin_bottom = 250.0
 mouse_default_cursor_shape = 6
 theme = ExtResource( 3 )
 text = "EEE"
-script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }

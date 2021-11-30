@@ -21,7 +21,7 @@ public class CursorMove : Control
 		mouseMovementY = 0f;
 	}
 
-	public override void _GuiInput(InputEvent inputEvent)
+	public override void _Input(InputEvent inputEvent)
 	{
 		// Mouse input
 		if (inputEvent is InputEventMouseMotion)
@@ -32,10 +32,10 @@ public class CursorMove : Control
 			mouseMovementY = inputEventMouseMotion.Relative.y;
 
 			if (isSelected)
-			{	
+			{
 				float newPositionX = Mathf.Clamp(RectGlobalPosition.x + mouseMovementX, 0, GetViewport().Size.x - RectSize.x);
 				float newPositionY = Mathf.Clamp(RectGlobalPosition.y + mouseMovementY, 0, GetViewport().Size.y - RectSize.y);
-				
+
 				RectGlobalPosition = new Vector2(newPositionX, newPositionY);
 			}
 		}
