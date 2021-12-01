@@ -6,12 +6,25 @@ public class CursorMove : Control
 	private float mouseMovementX;
 	private float mouseMovementY;
 
-	private bool isSelected = false;
+	private bool isMouseOver;
+	private bool isSelected;
 
 	// Called when the node enters the scene tree for the first time.
-	public override void _Ready()
-	{
+	// public override void _Ready()
+	// {
 
+	// }
+
+	// Signal
+	public void _OnMouseEntered()
+	{
+		isMouseOver = true;
+	}
+
+	// Signal
+	public void _OnMouseExited()
+	{
+		isMouseOver = false;
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -21,7 +34,7 @@ public class CursorMove : Control
 		mouseMovementY = 0f;
 	}
 
-	public override void _Input(InputEvent inputEvent)
+	public override void _GuiInput(InputEvent inputEvent)
 	{
 		// Mouse input
 		if (inputEvent is InputEventMouseMotion)
@@ -31,9 +44,10 @@ public class CursorMove : Control
 			mouseMovementX = inputEventMouseMotion.Relative.x;
 			mouseMovementY = inputEventMouseMotion.Relative.y;
 
-			if (isSelected)
+			if (isMouseOver && isSelected)
 			{
 				Vector2 newPosition = Vector2.Zero;
+
 				newPosition.x = Mathf.Clamp(RectGlobalPosition.x + mouseMovementX, 0, GetViewport().Size.x - RectSize.x);
 				newPosition.y = Mathf.Clamp(RectGlobalPosition.y + mouseMovementY, 0, GetViewport().Size.y - RectSize.y);
 

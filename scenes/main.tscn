@@ -19,7 +19,6 @@ __meta__ = {
 [node name="ColorRect" type="ColorRect" parent="Control"]
 margin_right = 250.0
 margin_bottom = 250.0
-mouse_filter = 2
 mouse_default_cursor_shape = 6
 color = Color( 0, 0.392157, 0.392157, 1 )
 script = ExtResource( 2 )
@@ -32,8 +31,12 @@ margin_right = 250.0
 margin_bottom = 100.0
 hint_tooltip = "Start typing..."
 theme = ExtResource( 3 )
+context_menu_enabled = false
 smooth_scrolling = true
 wrap_enabled = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[connection signal="mouse_entered" from="Control/ColorRect" to="Control/ColorRect" method="_OnMouseEntered"]
+[connection signal="mouse_exited" from="Control/ColorRect" to="Control/ColorRect" method="_OnMouseExited"]
