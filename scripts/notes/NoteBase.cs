@@ -1,19 +1,13 @@
 using System;
 using Godot;
 
-public class CursorMove : Control
+public class NoteBase : Control
 {
 	private float mouseMovementX;
 	private float mouseMovementY;
 
 	private bool isMouseOver;
 	private bool isSelected;
-
-	// Called when the node enters the scene tree for the first time.
-	// public override void _Ready()
-	// {
-
-	// }
 
 	// Signal
 	public void _OnMouseEntered()

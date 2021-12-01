@@ -64,7 +64,7 @@ public class Save : Node
 
 	public void LoadState()
 	{
-		PackedScene packedScene = (PackedScene)ResourceLoader.Load(savePath, noCache: true);
+		PackedScene packedScene = ResourceLoader.Load<PackedScene>(savePath, noCache: true);
 		if (packedScene == null)
 		{
 			GD.Print("Failed to load application state from disk, reason: no PackedScene found");
