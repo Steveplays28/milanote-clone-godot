@@ -81,7 +81,7 @@ public class Save : Node
 		}
 
 		Node scene = packedScene.Instance();
-		GetTree().Root.AddChild(scene);
+		GetNode("/root/Node/Control").AddChild(scene);
 
 		GD.Print($"Loaded application state from disk at path: {savePath}");
 	}
