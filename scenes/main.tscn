@@ -1,7 +1,6 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://scripts/Save.cs" type="Script" id=1]
-[ext_resource path="res://premade_assets/note.tscn" type="PackedScene" id=2]
 [ext_resource path="res://themes/theme.tres" type="Theme" id=3]
 [ext_resource path="res://scripts/buttons/AddNote.cs" type="Script" id=4]
 
@@ -24,8 +23,6 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Note" parent="Control/Persistent nodes" instance=ExtResource( 2 )]
-
 [node name="UI" type="Control" parent="Control"]
 margin_right = 40.0
 margin_bottom = 40.0
@@ -41,7 +38,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Button" type="Button" parent="Control/UI/Left sidebar"]
+[node name="Add note button" type="Button" parent="Control/UI/Left sidebar"]
 margin_left = 25.0
 margin_top = 25.0
 margin_right = 71.0
@@ -53,5 +50,3 @@ script = ExtResource( 4 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-
-[connection signal="pressed" from="Control/UI/Left sidebar/Button" to="Control/UI/Left sidebar/Button" method="_OnButtonPressed"]

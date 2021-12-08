@@ -10,7 +10,6 @@ public class Save : Node
 	public override void _Ready()
 	{
 		savePath = saveFolder + saveFile;
-		base._Ready();
 	}
 
 	public override void _Input(InputEvent inputEvent)
@@ -28,9 +27,11 @@ public class Save : Node
 			{
 				LoadState();
 			}
-		}
 
-		base._Input(inputEvent);
+			// if ((OS.GetName() == "OSX" ? inputEventKey.Command : inputEventKey.Control) && inputEventKey.Scancode == (int)KeyList.V)
+			// {
+			// }
+		}
 	}
 
 	public void SaveState()
@@ -81,11 +82,13 @@ public class Save : Node
 		}
 
 		Node scene = packedScene.Instance();
-		GetNode("/root/Node/Control").AddChild(scene);
+		Node controlNode = GetNode("/root/Node/Control");
+		controlNode.AddChild(scene);
+		controlNode.MoveChild(scene, 0);
+		scene.Owner = controlNode;
 
 		GD.Print($"Loaded application state from disk at path: {savePath}");
 	}
-
 
 	private Array GetAllChildren(Node node)
 	{

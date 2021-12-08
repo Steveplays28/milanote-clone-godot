@@ -9,6 +9,17 @@ public class NoteBase : Control
 	private bool isMouseOver;
 	private bool isSelected;
 
+	private Vector2 newPosition = Vector2.Zero;
+
+	public override void _Ready()
+	{
+		// Connect signals to functions
+		Connect("mouse_entered", this, "_OnMouseEntered");
+		Connect("mouse_exited", this, "_OnMouseExited");
+
+		newPosition = RectGlobalPosition;
+	}
+
 	// Signal
 	public void _OnMouseEntered()
 	{
@@ -26,29 +37,12 @@ public class NoteBase : Control
 	{
 		mouseMovementX = 0f;
 		mouseMovementY = 0f;
+
+		// GD.Print($"Mouse over: {isMouseOver} ----- Selected: {isSelected});
 	}
 
 	public override void _GuiInput(InputEvent inputEvent)
 	{
-		// Mouse input
-		if (inputEvent is InputEventMouseMotion)
-		{
-			InputEventMouseMotion inputEventMouseMotion = inputEvent as InputEventMouseMotion;
-
-			mouseMovementX = inputEventMouseMotion.Relative.x;
-			mouseMovementY = inputEventMouseMotion.Relative.y;
-
-			if (isMouseOver && isSelected)
-			{
-				Vector2 newPosition = Vector2.Zero;
-
-				newPosition.x = Mathf.Clamp(RectGlobalPosition.x + mouseMovementX, 0, GetViewport().Size.x - RectSize.x);
-				newPosition.y = Mathf.Clamp(RectGlobalPosition.y + mouseMovementY, 0, GetViewport().Size.y - RectSize.y);
-
-				RectGlobalPosition = newPosition;
-			}
-		}
-
 		if (inputEvent is InputEventMouseButton)
 		{
 			InputEventMouseButton inputEventMouseButton = inputEvent as InputEventMouseButton;
@@ -60,6 +54,28 @@ public class NoteBase : Control
 			else if (inputEventMouseButton.ButtonIndex == (int)ButtonList.Left && !inputEventMouseButton.Pressed)
 			{
 				isSelected = false;
+			}
+		}
+
+		if (inputEvent is InputEventMouseMotion)
+		{
+			InputEventMouseMotion inputEventMouseMotion = inputEvent as InputEventMouseMotion;
+
+			mouseMovementX = inputEventMouseMotion.Relative.x;
+			mouseMovementY = inputEventMouseMotion.Relative.y;
+
+			if (isMouseOver && isSelected)
+			{
+				// Vector2 newPosition = Vector2.Zero;
+
+				newPosition.x += mouseMovementX;
+				newPosition.y += mouseMovementY;
+
+				Vector2 newPositionSnapped = Vector2.Zero;
+				newPositionSnapped.x = Mathf.Clamp(newPosition.Snapped(new Vector2(32, 32)).x, 0, GetViewport().Size.x - RectSize.x);
+				newPositionSnapped.y = Mathf.Clamp(newPosition.Snapped(new Vector2(32, 32)).y, 0, GetViewport().Size.y - RectSize.y);
+
+				RectGlobalPosition = newPositionSnapped;
 			}
 		}
 	}
