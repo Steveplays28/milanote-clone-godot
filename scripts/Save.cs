@@ -3,9 +3,10 @@ using Godot.Collections;
 
 public class Save : Node
 {
+	[Export] public readonly string saveFolder = "user://";
+	[Export] public readonly string saveFile = "notes.tscn";
+
 	public string savePath;
-	public string saveFolder = "user://";
-	public string saveFile = "Note1.tscn";
 
 	public override void _Ready()
 	{

@@ -3,6 +3,8 @@ using Godot;
 
 public class AddNote : Button
 {
+	[Export] public string TextNotePath = "res://prefabs/note_text.tscn";
+
 	public override void _Ready()
 	{
 		Connect("button_down", this, nameof(OnButtonDown));
@@ -15,7 +17,7 @@ public class AddNote : Button
 
 	public void NewNote()
 	{
-		Control scene = ResourceLoader.Load<PackedScene>("res://prefabs/note.tscn", noCache: true).Instance<Control>();
+		Control scene = ResourceLoader.Load<PackedScene>(TextNotePath, noCache: true).Instance<Control>();
 		Control persistentNodes = GetNode<Control>("/root/Node/Control/PersistentNodes");
 
 		persistentNodes.AddChild(scene);
