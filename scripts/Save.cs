@@ -9,11 +9,15 @@ public class Save : Node
 
 	public override void _Ready()
 	{
+		base._Ready();
+
 		savePath = saveFolder + saveFile;
 	}
 
 	public override void _Input(InputEvent inputEvent)
 	{
+		base._Input(inputEvent);
+
 		if (inputEvent is InputEventKey)
 		{
 			InputEventKey inputEventKey = inputEvent as InputEventKey;

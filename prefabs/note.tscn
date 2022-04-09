@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://themes/theme.tres" type="Theme" id=1]
+[ext_resource path="res://resources/themes/theme.tres" type="Theme" id=1]
 [ext_resource path="res://scripts/notes/NoteBase.cs" type="Script" id=2]
 [ext_resource path="res://scripts/buttons/RemoveNote.cs" type="Script" id=3]
+[ext_resource path="res://scripts/buttons/ResizeButton.cs" type="Script" id=4]
 
 [node name="Note" type="ColorRect"]
 margin_left = 400.0
@@ -10,11 +11,8 @@ margin_top = 200.0
 margin_right = 600.0
 margin_bottom = 400.0
 mouse_default_cursor_shape = 6
-color = Color( 0, 0.392157, 0.392157, 1 )
+color = Color( 0, 0, 0, 1 )
 script = ExtResource( 2 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="TextEdit" type="TextEdit" parent="."]
 margin_right = 200.0
@@ -36,6 +34,15 @@ margin_bottom = 25.0
 hint_tooltip = "Click to remove note..."
 text = "X"
 script = ExtResource( 3 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+
+[node name="ResizeButton" type="Button" parent="."]
+visible = false
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -25.0
+margin_top = -25.0
+mouse_default_cursor_shape = 12
+text = "/"
+script = ExtResource( 4 )

@@ -13,32 +13,30 @@ public class NoteBase : Control
 
 	public override void _Ready()
 	{
-		// Connect signals to functions
-		Connect("mouse_entered", this, "_OnMouseEntered");
-		Connect("mouse_exited", this, "_OnMouseExited");
+		base._Ready();
+
+		Connect("mouse_entered", this, nameof(OnMouseEntered));
+		Connect("mouse_exited", this, nameof(OnMouseExited));
 
 		newPosition = RectGlobalPosition;
 	}
 
-	// Signal
-	public void _OnMouseEntered()
+	public void OnMouseEntered()
 	{
 		isMouseOver = true;
 	}
 
-	// Signal
-	public void _OnMouseExited()
+	public void OnMouseExited()
 	{
 		isMouseOver = false;
 	}
 
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(float delta)
 	{
+		base._Process(delta);
+
 		mouseMovementX = 0f;
 		mouseMovementY = 0f;
-
-		// GD.Print($"Mouse over: {isMouseOver} ----- Selected: {isSelected});
 	}
 
 	public override void _GuiInput(InputEvent inputEvent)

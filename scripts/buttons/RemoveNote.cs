@@ -5,12 +5,10 @@ public class RemoveNote : Button
 {
 	public override void _Ready()
 	{
-		// Connect signals to functions
-		Connect("pressed", this, "_OnButtonPressed");
+		Connect("pressed", this, nameof(OnButtonPressed));
 	}
 
-	// Signal
-	public void _OnButtonPressed()
+	public void OnButtonPressed()
 	{
 		DeleteNote();
 	}
