@@ -6,6 +6,7 @@ public class NoteManager : Node
 	[Export] public readonly string TextNotePath = "res://prefabs/note_text.tscn";
 	[Export] public readonly string ImageNotePath = "res://prefabs/note_image.tscn";
 	[Export] public readonly string AudioNotePath = "res://prefabs/note_audio.tscn";
+	[Export] public readonly string MiscNotePath = "res://prefabs/note_misc.tscn";
 
 	public override void _Ready()
 	{
@@ -90,6 +91,55 @@ public class NoteManager : Node
 
 		// 	CreateNote(audioStream);
 		// }
+
+		// Video files
+		if (files[0].EndsWith("mp4") || files[0].EndsWith("mkv") || files[0].EndsWith("mov"))
+		{
+			// Open mp4 file
+			Godot.File file = new Godot.File();
+			file.Open(files[0], Godot.File.ModeFlags.Read);
+
+			// Get file name
+			string[] split = file.GetPath().Split("/");
+			string fileName = split[split.Length - 1];
+			if (fileName.Contains("."))
+			{
+				fileName = fileName.Split(".")[0];
+			}
+
+			// Create thumbnail using ffmpeg
+			string[] ffmpegArguments = new string[] { "-ss", "00:00:00", "-i", files[0], "-frames:v", "1", "-q:v", "2", $"{OS.GetUserDataDir()}/{fileName}_thumbnail.jpg" };
+			if (OS.GetName() == "Windows")
+			{
+				OS.Execute("/ffmpeg/bin/ffmpeg.exe", ffmpegArguments);
+			}
+			else
+			{
+				OS.Execute("/usr/bin/ffmpeg", ffmpegArguments);
+			}
+
+			// Load created thumbnail as Image
+			Image image = new Image();
+			image.Load($"{OS.GetUserDataDir()}/{fileName}_thumbnail.jpg");
+
+			// Create ImageTexture from Image thumbnail
+			ImageTexture imageTexture = new ImageTexture();
+			imageTexture.CreateFromImage(image);
+
+			// Create note using mp4 file and thumbnail
+			CreateNote(file, imageTexture);
+
+			// Delete thumbnail file
+			string[] removeArguments = new string[] { $"{OS.GetUserDataDir()}/{fileName}_thumbnail.jpg" };
+			if (OS.GetName() == "Windows")
+			{
+				OS.Execute("del", removeArguments);
+			}
+			else
+			{
+				OS.Execute("rm", removeArguments);
+			}
+		}
 	}
 
 	public void CreateNote(string text)
@@ -115,5 +165,14 @@ public class NoteManager : Node
 
 		GetNode("/root/Node/Control/PersistentNodes").AddChild(prefab);
 		prefab.Call(nameof(NoteAudio.SetAudio), audio);
+	}
+	public void CreateNote(Godot.File file, ImageTexture thumbnail)
+	{
+		PackedScene packedScene = ResourceLoader.Load<PackedScene>(MiscNotePath, noCache: true);
+		Node prefab = packedScene.Instance();
+
+		GetNode("/root/Node/Control/PersistentNodes").AddChild(prefab);
+		prefab.Call(nameof(NoteMisc.SetFile), file);
+		prefab.Call(nameof(NoteMisc.SetThumbnail), thumbnail);
 	}
 }
